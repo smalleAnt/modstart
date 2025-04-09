@@ -1,37 +1,38 @@
 @extends($_viewFrame)
+
 @section('pageTitle'){{modstart_config('siteName').' | '.modstart_config('siteSlogan')}}@endsection
 
 {!! \ModStart\ModStart::js('asset/common/scrollAnimate.js') !!}
 @section('bodyContent')
-{{--banner轮播--}}
-{{--    <div style="background:#FFF;">--}}
-{{--        @if(\ModStart\Core\Util\AgentUtil::isMobile())--}}
-{{--            {!! \Module\Banner\View\BannerView::basic('Cms',null,'5-3') !!}--}}
-{{--        @else--}}
-{{--            {!! \Module\Banner\View\BannerView::basic('Cms',null,'5-2') !!}--}}
-{{--        @endif--}}
-{{--    </div>--}}
+
+    <div style="background:#FFF;">
+        @if(\ModStart\Core\Util\AgentUtil::isMobile())
+            {!! \Module\Banner\View\BannerView::basic('Cms',null,'5-3') !!}
+        @else
+            {!! \Module\Banner\View\BannerView::basic('Cms',null,'5-2') !!}
+        @endif
+    </div>
 
     <div class="ub-container">
-{{--企业简介--}}
-{{--        <div class="tw-bg-white tw-p-4 lg:tw-p-8 tw-rounded margin-top">--}}
-{{--            <div class="row">--}}
-{{--                <div class="col-md-3">--}}
-{{--                    <img class="tw-w-full tw-rounded tw-mb-2" data-scroll-animate="animated fadeInUp"--}}
-{{--                         src="{{\ModStart\Core\Assets\AssetsUtil::fix(modstart_config('Cms_HomeInfoImage','/placeholder/300x200'))}}"/>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-9">--}}
-{{--                    <div class="tw-text-lg lg:tw-text-3xl">{{modstart_config('Cms_HomeInfoTitle','[首页介绍标题]')}}</div>--}}
-{{--                    <div class="ub-html tw-mt-4">--}}
-{{--                        {!! modstart_config('Cms_HomeInfoContent','[首页介绍说明]') !!}--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
+
+        <div class="tw-bg-white tw-p-4 lg:tw-p-8 tw-rounded margin-top">
+            <div class="row">
+                <div class="col-md-3">
+                    <img class="tw-w-full tw-rounded tw-mb-2" data-scroll-animate="animated fadeInUp"
+                         src="{{\ModStart\Core\Assets\AssetsUtil::fix(modstart_config('Cms_HomeInfoImage','/placeholder/300x200'))}}"/>
+                </div>
+                <div class="col-md-9">
+                    <div class="tw-text-lg lg:tw-text-3xl">{{modstart_config('Cms_HomeInfoTitle','[首页介绍标题]')}}</div>
+                    <div class="ub-html tw-mt-4">
+                        {!! modstart_config('Cms_HomeInfoContent','[首页介绍说明]') !!}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div>
             <div class="ub-nav-header">
-                热门漫画
+                产品展示
             </div>
             <div class="tw-pb-8">
                 <div class="ub-list-items">
@@ -51,7 +52,7 @@
                 </div>
             </div>
         </div>
-        {{--       可以不要
+
         <div>
             <div class="ub-nav-header">
                 客户案例
@@ -108,7 +109,7 @@
                 {!! \Module\Partner\View\PartnerView::raw('Cms') !!}
             </div>
         </div>
-        --}}
+
     </div>
 
 @endsection
