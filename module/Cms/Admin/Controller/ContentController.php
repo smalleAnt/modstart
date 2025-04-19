@@ -57,6 +57,7 @@ class ContentController extends Controller
     {
         AdminPermission::permitCheck('CmsContentManage' . $modelId);
         $this->modelId = $modelId;
+//        CmsModelUtil::clearCache();
         $this->model = CmsModelUtil::get($modelId);
         $this->modelTable = 'cms_content';
         $this->modelDataTable = "cms_m_" . $this->model['name'];

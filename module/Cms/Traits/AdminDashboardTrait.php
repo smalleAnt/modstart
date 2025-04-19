@@ -23,8 +23,8 @@ trait AdminDashboardTrait
             AdminWidgetDashboard::callIcon($row);
         }));
         AdminWidgetDashboard::call($page);
-        $page->append(new CmsInfoWidget());
-        $page->append(new ServerInfoWidget());
+//        $page->append(new CmsInfoWidget());
+//        $page->append(new ServerInfoWidget());
         return $page;
     }
 }

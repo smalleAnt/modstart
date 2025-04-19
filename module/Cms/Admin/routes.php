@@ -29,3 +29,7 @@ $router->match(['get', 'post'], 'cms/backup', 'BackupController@index');
 $router->match(['get', 'post'], 'cms/restore', 'RestoreController@index');
 $router->match(['post'], 'cms/restore/delete', 'RestoreController@delete');
 $router->match(['post'], 'cms/restore/submit', 'RestoreController@submit');
+
+$router->match(['get', 'post'], 'cms/comic_content/{modelId}', 'ComicController@index');
+$router->match(['get', 'post'], 'cms/comic_content/edit/{modelId}', 'ComicController@edit');
+

@@ -318,3 +318,9 @@ AdminMenu::register(function () {
 ### 微信交流群
 
 <img width="400" src="https://modstart.com/contact/ContactWechatGroup" />
+
+在容器中执行命令
+docker exec --user www-data -w /data/website/modstart 56f4da31dc93 php artisan make:migration creat_cms_m_comic_table
+
+新增模块目录结构保持这样
+

@@ -75,16 +75,21 @@ class ModuleServiceProvider extends ServiceProvider
                 AdminWidgetLink::build('CMS', $menu)
             ];
         });
-
+        # 增加菜单目录
         AdminMenu::register(function () {
             $models = CmsModelUtil::all();
             $contentMenus = [];
             foreach ($models as $model) {
-                $contentMenus[] = [
+                $temp = [
                     'title' => $model['title'],
                     'rule' => 'CmsContentManage' . $model['id'],
-                    'url' => action('\Module\Cms\Admin\Controller\ContentController@index', ['modelId' => $model['id']]),
                 ];
+                if ($model['id'] == 7) {
+                    $temp['url'] = action('\Module\Cms\Admin\Controller\ComicController@index', ['modelId' => $model['id']]);
+                }else{
+                    $temp['url'] = action('\Module\Cms\Admin\Controller\ContentController@index', ['modelId' => $model['id']]);
+                }
+                $contentMenus[] = $temp;
             }
             return [
                 [
