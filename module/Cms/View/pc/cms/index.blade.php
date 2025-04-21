@@ -14,44 +14,44 @@
 
     <div class="ub-container">
 {{--企业简介--}}
-{{--        <div class="tw-bg-white tw-p-4 lg:tw-p-8 tw-rounded margin-top">--}}
-{{--            <div class="row">--}}
-{{--                <div class="col-md-3">--}}
-{{--                    <img class="tw-w-full tw-rounded tw-mb-2" data-scroll-animate="animated fadeInUp"--}}
-{{--                         src="{{\ModStart\Core\Assets\AssetsUtil::fix(modstart_config('Cms_HomeInfoImage','/placeholder/300x200'))}}"/>--}}
-{{--                </div>--}}
-{{--                <div class="col-md-9">--}}
-{{--                    <div class="tw-text-lg lg:tw-text-3xl">{{modstart_config('Cms_HomeInfoTitle','[首页介绍标题]')}}</div>--}}
-{{--                    <div class="ub-html tw-mt-4">--}}
-{{--                        {!! modstart_config('Cms_HomeInfoContent','[首页介绍说明]') !!}--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
-        <div>
-            <div class="ub-nav-header">
-                热门漫画
-            </div>
-            <div class="tw-pb-8">
-                <div class="ub-list-items">
-                    <div class="row">
-                        @foreach(MCms::listContentByCatUrl('product',1,4,['where'=>['isRecommend'=>true]]) as $record)
-                            <div class="col-md-3 col-6">
-                                <div class="item-p" data-scroll-animate="animated fadeInUp">
-                                    <a class="image" href="{{$record['_url']}}" style="padding:0.25rem 0 0 0;">
-                                        <div class="cover contain ub-cover-1-1"
-                                             style="width:90%;margin:0 auto;background-image:url({{\ModStart\Core\Assets\AssetsUtil::fix($record['cover'])}});"></div>
-                                    </a>
-                                    <a class="title" href="{{$record['_url']}}">{{$record['title']}}</a>
-                                </div>
-                            </div>
-                        @endforeach
+{{--        <div class="tw-bg-white tw-p-4 lg:tw-p-8 tw-rounded margin-top">
+            <div class="row">
+                <div class="col-md-3">
+                    <img class="tw-w-full tw-rounded tw-mb-2" data-scroll-animate="animated fadeInUp"
+                         src="{{\ModStart\Core\Assets\AssetsUtil::fix(modstart_config('Cms_HomeInfoImage','/placeholder/300x200'))}}"/>
+                </div>
+                <div class="col-md-9">
+                    <div class="tw-text-lg lg:tw-text-3xl">{{modstart_config('Cms_HomeInfoTitle','[首页介绍标题]')}}</div>
+                    <div class="ub-html tw-mt-4">
+                        {!! modstart_config('Cms_HomeInfoContent','[首页介绍说明]') !!}
                     </div>
                 </div>
             </div>
-        </div>
-        {{--       可以不要
+        </div>--}}
+        {{--
+                <div>
+                    <div class="ub-nav-header">
+                        产品展示
+                    </div>
+                    <div class="tw-pb-8">
+                        <div class="ub-list-items">
+                            <div class="row">
+                                @foreach(MCms::listContentByCatUrl('product',1,4,['where'=>['isRecommend'=>true]]) as $record)
+                                    <div class="col-md-3 col-6">
+                                        <div class="item-p" data-scroll-animate="animated fadeInUp">
+                                            <a class="image" href="{{$record['_url']}}" style="padding:0.25rem 0 0 0;">
+                                                <div class="cover contain ub-cover-1-1"
+                                                     style="width:90%;margin:0 auto;background-image:url({{\ModStart\Core\Assets\AssetsUtil::fix($record['cover'])}});"></div>
+                                            </a>
+                                            <a class="title" href="{{$record['_url']}}">{{$record['title']}}</a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
         <div>
             <div class="ub-nav-header">
                 客户案例
@@ -109,6 +109,30 @@
             </div>
         </div>
         --}}
+
+        <div>
+            <div class="ub-nav-header">
+                热门动漫
+            </div>
+            <div class="tw-pb-8">
+                <div class="ub-list-items">
+                    <div class="row">
+                        @foreach(\Module\Cms\Model\CmsComic::getListWithTrashed([],12) as $record)
+                            <div class="col-md-2 col-6">
+                                <div class="item-p" data-scroll-animate="animated fadeInUp" style="margin-bottom:0rem;padding: 0;box-shadow: none;background: none;width: 250px">
+                                    <a class="image" href="{{$record['_url']}}" style="padding:0.25rem 0 0 0;">
+                                        <div class="cover contain ub-cover-1-1"
+                                             style="width:90%;background-image:url({{\ModStart\Core\Assets\AssetsUtil::fix($record['cover'])}});"></div>
+                                    </a>
+                                    <a class="title" href="{{$record['_url']}}" style="padding: unset;height:1.25rem">{{$record['name']}}</a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 @endsection
