@@ -32,4 +32,27 @@ $router->match(['post'], 'cms/restore/submit', 'RestoreController@submit');
 
 $router->match(['get', 'post'], 'cms/comic_content/{modelId}', 'ComicController@index');
 $router->match(['get', 'post'], 'cms/comic_content/edit/{modelId}', 'ComicController@edit');
+$router->match(['post'], 'cms/comic_content/delete/{modelId}', 'ComicController@delete');
+$router->get('cms/comic_content/{comicId}/chapter', 'ComicController@chapterList');
+
+$router->group(['prefix' => 'cms/comic_content'],function ()use ($router){
+    $router->match(['get', 'post'], '/{modelId}', 'ComicController@index');
+    $router->match(['get', 'post'], '/edit/{modelId}', 'ComicController@edit');
+    $router->match(['post'], '/delete/{modelId}', 'ComicController@delete');
+    $router->get('/{comicId}/chapter', 'ComicController@chapterList');
+});
+
+
+// 重构路由层级结构，形成清晰的父子关系
+$router->group(['prefix' => 'cms/comic_content'], function () use ($router) {
+    // 列表页路由（父级）
+    $router->match(['get', 'post'], '/{modelId}', 'ComicController@index')->name('comic.list');
+
+    // 详情页分组（子层级）
+    $router->group(['prefix' => '/{modelId}'], function () use ($router) {
+        $router->get('/chapter/{comicId}', 'ComicController@chapterList')->name('comic.chapter');
+        $router->match(['get', 'post'], '/edit', 'ComicController@edit');
+        $router->post('/delete', 'ComicController@delete');
+    });
+});
 

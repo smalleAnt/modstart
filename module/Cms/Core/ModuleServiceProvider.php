@@ -119,6 +119,11 @@ class ModuleServiceProvider extends ServiceProvider
                         //     'url' => '\Module\Cms\Admin\Controller\TemplateController@index',
                         // ],
                         [
+                            'title' => '章节详情',
+                            'url' => route('comic.chapter', ['modelId' => ':modelId', 'comicId' => ':comicId']),
+                            'key'   => 'custom_menu_key', // 自定义菜单标识字段
+                        ],
+                        [
                             'title' => '备份恢复',
                             'children' => [
                                 [
@@ -135,6 +140,7 @@ class ModuleServiceProvider extends ServiceProvider
                 ],
             ];
         });
+
 
         AdminWidgetDashboard::registerIcon(function (Row $row) {
             $models = CmsModelUtil::all();

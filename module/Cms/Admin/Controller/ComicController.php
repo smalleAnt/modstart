@@ -6,6 +6,7 @@ namespace Module\Cms\Admin\Controller;
 
 use Carbon\Carbon;
 use Illuminate\Routing\Controller;
+use ModStart\Admin\Auth\Admin;
 use ModStart\Admin\Auth\AdminPermission;
 use ModStart\Admin\Layout\AdminDialogPage;
 use ModStart\Admin\Layout\AdminPage;
@@ -17,6 +18,7 @@ use ModStart\Core\Input\Response;
 use ModStart\Core\Util\ArrayUtil;
 use ModStart\Core\Util\CRUDUtil;
 use ModStart\Core\Util\SerializeUtil;
+use ModStart\Core\Util\TagUtil;
 use ModStart\Field\AbstractField;
 use ModStart\Field\AutoRenderedFieldValue;
 use ModStart\Field\Tags;
@@ -50,6 +52,7 @@ class ComicController extends Controller
     private $modelId;
     private $modelTable;
     private $modelDataTable;
+    private $comicId;
 
     private function init($modelId)
     {
@@ -79,7 +82,7 @@ class ComicController extends Controller
             CmsModelContentStatus::SHOW => 'success',
             CmsModelContentStatus::HIDE => 'muted',
         ]);
-        $grid->display('updated_at', L('Updated At'));
+        $grid->display('post_time', '发布时间');
         $filterFields = array_filter($this->model['_customFields'], function ($o) {
             return $o['isSearch'];
         });
@@ -90,13 +93,28 @@ class ComicController extends Controller
         });
         $grid->canAdd(true)->urlAdd(action('\\' . __CLASS__ . '@edit', ['modelId' => $this->modelId]));
         $grid->canEdit(true)->urlEdit(action('\\' . __CLASS__ . '@edit', ['modelId' => $this->modelId]));
+        $grid->canDelete(true)->urlDelete(action('\\' . __CLASS__ . '@delete', ['modelId' => $this->modelId]));
 
-//        $grid->batchOperatePrepend('<button class="btn" data-batch-dialog-operate="' . modstart_admin_url('cms/content/batch_move/' . $this->modelId) . '"><i class="iconfont icon-right"></i> 批量移动</button>');
-//        $grid->pageJumpEnable(true);
-//        $grid->canCopy(true);
+
+        $grid->hookItemOperateRendering(function (ItemOperate $itemOperate) {
+            $item = $itemOperate->item();
+            $url = modstart_admin_url("cms/comic_content/{$item->id}/chapter");
+
+            $title = addslashes($item->title);
+            $itemOperate->push('<a class="btn btn-sm btn-primary" href="javascript:void(0);" onclick="aa()">章节</a>');
+        });
         if (Request::isPost()) {
             return $grid->request();
         }
+        $page->append(<<<JS
+<script>
+function aa(){
+    $('#adminTabPage').append(`<iframe src="" class="hidden" frameborder="0" data-tab-page="5555"></iframe>`);
+    $('#adminTabMenu').append(`<a href="javascript:;" data-tab-menu="5555" draggable="false">aaaaa<i class="close iconfont icon-close"></i></a>`);
+}
+</script>
+JS
+        );
         return $page->pageTitle($this->model['title'])->append($grid);
     }
 
@@ -108,12 +126,12 @@ class ComicController extends Controller
      */
     public function edit(AdminDialogPage $page, $modelId)
     {
-        $input = InputPackage::buildFromInput();
         $this->init($modelId);
         $id = CRUDUtil::id();
         $record = [];
         $model = new CmsComic();
         if ($id) {
+            $this->comicId = $id;
             $record = ModelUtil::get($model, $id);
             BizException::throwsIfEmpty('记录不存在', $record);
             if (!empty($record)) {
@@ -141,6 +159,19 @@ class ComicController extends Controller
                         $form->text('source', '来源');
                         $form->image('cover', '封面');
                     }
+                });
+                $form->layoutPanel('章节列表', function (Form $form){
+                    $html = '';
+                    $chapters = ModelUtil::all('cms_m_comic_chapters',['comic_id'=>$this->comicId]);
+                    // 如果没有章节，显示提示
+                    if (empty($chapters)) {
+                        $html .= '<p>暂无章节！</p>';
+                    }else{
+                        foreach ($chapters as $chapter) {
+                            $html .= "<p>{$chapter['title']}</p>";
+                        }
+                    }
+                    $form->html("chapters",$html);
                 });
             });
 
@@ -177,5 +208,33 @@ class ComicController extends Controller
         }
 
         return $page->pageTitle($this->model['title'] . '编辑')->body($form);
+    }
+
+    /**
+     * 删除
+     * @param AdminPage $page
+     * @param $modelId
+     * @return array|AdminPage|string
+     */
+    public function delete($modelId)
+    {
+        AdminPermission::demoCheck();
+        $this->init($modelId);
+        $ids = CRUDUtil::ids();
+        $model = new CmsComic();
+        foreach ($ids as $id) {
+            $record = ModelUtil::get($model, $id);
+            BizException::throwsIfEmpty($id.'记录不存在', $record);
+            ModelUtil::transactionBegin();
+            ModelUtil::delete($model, $id);
+            ModelUtil::transactionCommit();
+        }
+        return Response::redirect(CRUDUtil::jsGridRefresh());
+    }
+
+    public function chapterList(AdminPage $page,$comicId)
+    {
+        $data = ['chapters'=>[]];
+        return view('module::cms.view.admin.comic.chapter', $data);
     }
 }

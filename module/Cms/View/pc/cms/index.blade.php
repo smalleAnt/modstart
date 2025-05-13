@@ -120,11 +120,11 @@
                         @foreach(\Module\Cms\Model\CmsComic::getListWithTrashed([],12) as $record)
                             <div class="col-md-2 col-6">
                                 <div class="item-p" data-scroll-animate="animated fadeInUp" style="margin-bottom:0rem;padding: 0;box-shadow: none;background: none;width: 250px">
-                                    <a class="image" href="{{$record['_url']}}" style="padding:0.25rem 0 0 0;">
+                                    <a class="image" href="/comic/{{$record['id']}}" style="padding:0.25rem 0 0 0;">
                                         <div class="cover contain ub-cover-1-1"
                                              style="width:90%;background-image:url({{\ModStart\Core\Assets\AssetsUtil::fix($record['cover'])}});"></div>
                                     </a>
-                                    <a class="title" href="{{$record['_url']}}" style="padding: unset;height:1.25rem">{{$record['name']}}</a>
+                                    <a class="title" href="/comic/{{$record['id']}}" style="padding: unset;height:1.25rem">{{$record['name']}}</a>
                                 </div>
                             </div>
                         @endforeach
