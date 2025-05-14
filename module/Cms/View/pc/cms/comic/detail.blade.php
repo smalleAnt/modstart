@@ -1,8 +1,8 @@
 @extends($_viewFrame)
 
 @section('pageTitleMain'){{$record['name']}}@endsection
-@section('pageKeywords'){{isset($record['seoKeywords'])?$record['seoKeywords']:$record['name']}}@endsection
-@section('pageDescription'){{isset($record['seoDescription'])?$record['seoDescription']:$record['name']}}@endsection
+@section('pageKeywords'){{isset($record['seo_keywords'])?$record['seo_keywords']:$record['name']}}@endsection
+@section('pageDescription'){{isset($record['seo_description'])?$record['seo_description']:$record['summary']}}@endsection
 
 @section('bodyContent')
     <style>

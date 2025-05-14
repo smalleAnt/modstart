@@ -1,7 +1,7 @@
 @extends($_viewFrame)
 @section('pageTitleMain'){{$record['comic']['name']}} {{$record['number']}} {{$record['title']}}@endsection
-@section('pageKeywords'){{isset($record['seoKeywords'])?$record['seoKeywords']:$record['title']}}@endsection
-@section('pageDescription'){{isset($record['seoDescription'])?$record['seoDescription']:$record['title']}}@endsection
+@section('pageKeywords'){{$record['comic']['name']}} {{$record['number']}} {{$record['title']}}@endsection
+@section('pageDescription'){{$record['comic']['name']}} {{$record['number']}} {{$record['title']}}@endsection
 @section('bodyContent')
 
     <div class="ub-container margin-bottom">
