@@ -19,7 +19,7 @@ class CreatCmsMComicTable extends Migration
             $table->string('name')->nullable(false)->comment('漫画名');
             $table->string('summary',500)->nullable(false)->comment('摘要');
             $table->integer('hits')->default(0)->comment('点击数');
-            $table->tinyInteger('status')->default(1)->comment('1|显示;2|隐藏');
+            $table->tinyInteger('status')->default(1)->comment('1|连载中;2|已完结');
             $table->timestamp('post_time')->nullable()->comment('发布时间');
             $table->tinyInteger('is_top')->nullable(false)->comment('是否置顶');
             $table->string('tags')->nullable()->comment('标签');
@@ -41,6 +41,7 @@ class CreatCmsMComicTable extends Migration
             $table->string('number')->nullable()->comment('章节编号');
             $table->integer('hits')->default(0)->comment('点击数');
             $table->string('file_path')->nullable(false)->comment('图片地址');
+            $table->integer('sort')->default(0)->comment('排序');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
