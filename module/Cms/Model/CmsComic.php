@@ -13,10 +13,25 @@ class CmsComic extends Model
 
     protected $table = 'cms_m_comics';
 
+    const SERIALIZING = 1;
+    const FINISH = 2;
+
+    public static function getStatusList()
+    {
+        return [
+            self::SERIALIZING => '连载中',
+            self::FINISH => '已完结',
+        ];
+    }
+
+    public static $statusMap = [
+        self::SERIALIZING => '连载中',
+        self::FINISH => '已完结',
+    ];
 
     public function chapter()
     {
-        return $this->hasMany(CmsComicChapter::class,'comic_id','id');
+        return $this->hasMany(CmsComicChapter::class,'comic_id','id')->orderBy('sort','desc');
     }
 
     public static function getListWithTrashed($where, $perPage = 0, $page = 1)
@@ -31,7 +46,7 @@ class CmsComic extends Model
 
     public static function getOneWithoutTrashed($where)
     {
-        $query = self::where($where);
+        $query = self::with('chapter')->where($where);
         return $query->first();
     }
 }

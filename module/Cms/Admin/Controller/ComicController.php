@@ -78,9 +78,9 @@ class ComicController extends Controller
         $grid->text('author', '作者');
         $grid->text('summary', '摘要');
         $grid->number('hits', '点击数');
-        $grid->type('status', '状态')->type(CmsModelContentStatus::class, [
-            CmsModelContentStatus::SHOW => 'success',
-            CmsModelContentStatus::HIDE => 'muted',
+        $grid->type('status', '状态')->type(CmsComic::getStatusList(), [
+            CmsComic::SERIALIZING => 'success',
+            CmsComic::FINISH => 'muted',
         ]);
         $grid->display('post_time', '发布时间');
         $filterFields = array_filter($this->model['_customFields'], function ($o) {
@@ -151,7 +151,7 @@ JS
                     if (in_array($this->model['mode'], [CmsMode::LIST_DETAIL, CmsMode::PAGE])) {
                         $form->textarea('summary', '摘要');
                         $form->datetime('post_time', '发布时间')->required()->help('可以是未来时间，在未来发布')->defaultValue(Carbon::now());
-                        $form->radio('status', '状态')->optionType(CmsModelContentStatus::class)->required()->defaultValue(CmsModelContentStatus::SHOW);
+                        $form->radio('status', '状态')->options(CmsComic::getStatusList())->required()->defaultValue(CmsComic::SERIALIZING);
 
                         $form->switch('isTop', '置顶');
                         $form->tags('tags', '标签')->serializeType(Tags::SERIALIZE_TYPE_COLON_SEPARATED);

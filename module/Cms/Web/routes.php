@@ -39,6 +39,7 @@ $router->group([
     }
 
     $router->group(['prefix' => 'comic'], function () use ($router) {
-        $router->get( '/{id}', 'ComicController@show');
+        $router->get( '/{comicId}', 'ComicController@show');
+        $router->get( '/{comicId}/chapter/{chapterId}', 'ComicController@chapter');
     });
 });
