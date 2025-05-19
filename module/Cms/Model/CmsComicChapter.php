@@ -18,9 +18,14 @@ class CmsComicChapter extends Model
         return $this->belongsTo(CmsComic::class,'comic_id','id');
     }
 
+    public function imgs()
+    {
+        return $this->hasMany(CmsComicChapterImg::class,'chapter_id','id');
+    }
+
     public static function getOneWithoutTrashed($where)
     {
-        $query = self::with('comic')->where($where);
+        $query = self::with(['comic','imgs'])->where($where);
         return $query->first();
     }
 

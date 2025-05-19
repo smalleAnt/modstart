@@ -17,7 +17,9 @@
                     @endif
                 </div>
                 <div class="tw-p-10" style="text-align: center;">
-                    <img style="width:90%;" src="{{\ModStart\Core\Assets\AssetsUtil::fix($record['file_path'])}}" />
+                    @foreach($record['imgs'] as $img)
+                    <img style="width:90%;" src="{{\ModStart\Core\Assets\AssetsUtil::fix($img['file_path'])}}" />
+                    @endforeach
                 </div>
             </div>
         </div>
