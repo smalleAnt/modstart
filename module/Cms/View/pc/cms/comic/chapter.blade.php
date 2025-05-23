@@ -10,10 +10,14 @@
                 <div class="row">
                     @if ($record['pre_chapter_id'] != null)
                         <a href="/comic/{{$record['comic_id']}}/chapter/{{$record['pre_chapter_id']}}"  class="offset-md-2 col-md-1 btn btn-primary" style="">上一章</a>
+                    @else
+                        <span class="offset-md-2 col-md-1"></span>
                     @endif
                     <h1 class="ub-text-center col-md-6">{{$record['number']}} {{$record['title']}}</h1>
                     @if ($record['next_chapter_id'] != null)
                         <a href="/comic/{{$record['comic_id']}}/chapter/{{$record['next_chapter_id']}}"  class="col-md-1 btn btn-primary" style="">下一章</a>
+                    @else
+                        <span class="col-md-1"></span>
                     @endif
                 </div>
                 <div class="tw-p-10" style="text-align: center;">

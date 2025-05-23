@@ -20,7 +20,7 @@ class CmsComicChapter extends Model
 
     public function imgs()
     {
-        return $this->hasMany(CmsComicChapterImg::class,'chapter_id','id');
+        return $this->hasMany(CmsComicChapterImg::class,'chapter_id','id')->orderBy('sort','asc');
     }
 
     public static function getOneWithoutTrashed($where)
