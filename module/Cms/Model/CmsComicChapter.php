@@ -27,7 +27,7 @@ class CmsComicChapter extends Model
     //获取下一章
     public static function getNext($comicId,$sort)
     {
-         return self::where('comic_id',$comicId)->where('sort','>',$sort)->orderBy('sort','desc')->first();
+         return self::where('comic_id',$comicId)->where('sort','>',$sort)->orderBy('sort','asc')->first();
     }
 
     //获取下一章
