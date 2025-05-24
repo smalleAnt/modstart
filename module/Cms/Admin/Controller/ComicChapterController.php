@@ -15,18 +15,15 @@ use ModStart\Core\Input\Request;
 use ModStart\Core\Input\Response;
 use ModStart\Core\Util\ArrayUtil;
 use ModStart\Core\Util\CRUDUtil;
-use ModStart\Field\Tags;
 use ModStart\Form\Form;
-use ModStart\Grid\Displayer\ItemOperate;
 use ModStart\Grid\Grid;
-use ModStart\Grid\GridFilter;
 use ModStart\Layout\LayoutGrid;
 use Module\Cms\Model\CmsComic;
-use Module\Cms\Type\CmsMode;
+use Module\Cms\Model\CmsComicChapter;
 use Module\Cms\Util\CmsModelUtil;
 use Module\Member\Util\MemberFieldUtil;
 
-class ComicController extends Controller
+class ComicChapterController extends Controller
 {
     public static $PermitMethodMap = [
         '*' => '*',
@@ -56,49 +53,21 @@ class ComicController extends Controller
     public function index(AdminPage $page, $modelId)
     {
         MemberFieldUtil::register();
-        $this->init($modelId);
-        $grid = Grid::make(new CmsComic());
-        $grid->text('name', '名称');
-        $grid->text('author', '作者');
-        $grid->text('summary', '摘要');
-        $grid->number('hits', '点击数');
-        $grid->type('status', '状态')->type(CmsComic::getStatusList(), [
-            CmsComic::SERIALIZING => 'success',
-            CmsComic::FINISH => 'muted',
-        ]);
-        $grid->display('post_time', '发布时间');
-        $filterFields = array_filter($this->model['_customFields'], function ($o) {
-            return $o['isSearch'];
-        });
-        $tableName = $this->modelDataTable;
-        $grid->gridFilter(function (GridFilter $filter) use ($filterFields, $tableName) {
-//            $filter->eq('id', 'ID');
-            $filter->like('name', '名称');
-        });
-        $grid->canAdd(true)->urlAdd(action('\\' . __CLASS__ . '@edit', ['modelId' => $this->modelId]));
-        $grid->canEdit(true)->urlEdit(action('\\' . __CLASS__ . '@edit', ['modelId' => $this->modelId]));
-        $grid->canDelete(true)->urlDelete(action('\\' . __CLASS__ . '@delete', ['modelId' => $this->modelId]));
+        $this->init(7);
+        $grid = Grid::make(new CmsComicChapter());
+        $grid->number('id', 'ID');
+        $grid->text('comic.name', '所属漫画');
+        $grid->text('number', '章节编号');
+        $grid->text('title', '章节名称');
+        $grid->number('sort', '排序');
 
+        $grid->canAdd(true)->urlAdd(action('\\' . __CLASS__ . '@edit', ['modelId' => 7]));
+        $grid->canEdit(true)->urlEdit(action('\\' . __CLASS__ . '@edit', ['modelId' => 7]));
+        $grid->canDelete(true)->urlDelete(action('\\' . __CLASS__ . '@delete', ['modelId' => 7]));
 
-        $grid->hookItemOperateRendering(function (ItemOperate $itemOperate) {
-            $item = $itemOperate->item();
-            $url = modstart_admin_url("cms/comic_content/{$item->id}/chapter");
-
-            $title = addslashes($item->title);
-            $itemOperate->push('<a class="btn btn-sm btn-primary" href="javascript:void(0);" onclick="aa()">章节</a>');
-        });
         if (Request::isPost()) {
             return $grid->request();
         }
-        $page->append(<<<JS
-<script>
-function aa(){
-    $('#adminTabPage').append(`<iframe src="" class="hidden" frameborder="0" data-tab-page="5555"></iframe>`);
-    $('#adminTabMenu').append(`<a href="javascript:;" data-tab-menu="5555" draggable="false">aaaaa<i class="close iconfont icon-close"></i></a>`);
-}
-</script>
-JS
-        );
         return $page->pageTitle($this->model['title'])->append($grid);
     }
 
@@ -113,8 +82,9 @@ JS
         $this->init($modelId);
         $id = CRUDUtil::id();
         $record = [];
-        $model = new CmsComic();
+        $model = new CmsComicChapter();
         if ($id) {
+            $this->comicId = $id;
             $record = ModelUtil::get($model, $id);
             BizException::throwsIfEmpty('记录不存在', $record);
             if (!empty($record)) {
@@ -130,39 +100,13 @@ JS
         $form->layoutGrid(function (LayoutGrid $layout) {
             $layout->layoutColumn(8,function (Form $form){
                 $form->layoutPanel('基本信息', function (Form $form) {
-                    $form->text('name', '名称')->required();
-                    if (in_array($this->model['mode'], [CmsMode::LIST_DETAIL, CmsMode::PAGE])) {
-                        $form->textarea('summary', '摘要');
-                        $form->datetime('post_time', '发布时间')->required()->help('可以是未来时间，在未来发布')->defaultValue(Carbon::now());
-                        $form->radio('status', '状态')->options(CmsComic::getStatusList())->required()->defaultValue(CmsComic::SERIALIZING);
+                    $selectOptions = CmsComic::getOptions();
+                    $form->select('comic.id', '所属漫画')->options($selectOptions)->required();
+                    $form->text('number', '章节编号')->required();
+                    $form->text('title', '章节标题');
+                    $form->number('sort', '排序')->required();
+                    $form->images('file_path', '图片');
 
-                        $form->switch('isTop', '置顶');
-                        $form->tags('tags', '标签')->serializeType(Tags::SERIALIZE_TYPE_COLON_SEPARATED);
-                        $form->text('author', '作者');
-                        $form->text('source', '来源');
-                        $form->image('cover', '封面');
-                    }
-                });
-                $form->layoutPanel('章节列表', function (Form $form){
-                    $html = '';
-                    $chapters = ModelUtil::all('cms_m_comic_chapters',['comic_id'=>$this->comicId]);
-                    // 如果没有章节，显示提示
-                    if (empty($chapters)) {
-                        $html .= '<p>暂无章节！</p>';
-                    }else{
-                        foreach ($chapters as $chapter) {
-                            $html .= "<p>{$chapter['title']}</p>";
-                        }
-                    }
-                    $form->html("chapters",$html);
-                });
-            });
-
-            $layout->layoutColumn(4, function ($form) {
-                $form->layoutPanel('SEO信息', function (Form $form) {
-                    $form->text('seoTitle', 'SEO标题');
-                    $form->text('seoDescription', 'SEO描述');
-                    $form->textarea('seoKeywords', 'SEO关键词');
                 });
             });
         });
@@ -171,11 +115,13 @@ JS
         if (Request::isPost()) {
             AdminPermission::demoCheck();
             return $form->formRequest(function (Form $form) use ($record,$model) {
-                $data = $form->dataForming();
+                $data = $form->dataSubmitted();
                 $recordValue = ArrayUtil::keepKeys($data, [
-                    'name', 'summary', 'status','author','post_time','is_top','tags','cover','seo_title','seo_description',
-                    'seo_keywords'
+                    'comic_id', 'number', 'title','sort','file_path'
                 ]);
+                $domain = config('app.url');
+                $recordValue['comic_id'] = $data['comic']['id'];
+                $recordValue['file_path'] = str_replace($domain,'',$recordValue['file_path']);
                 ModelUtil::transactionBegin();
                 if (!empty($record['id'])) {
                     $recordValue['updated_at'] = Carbon::now();
@@ -204,7 +150,7 @@ JS
         AdminPermission::demoCheck();
         $this->init($modelId);
         $ids = CRUDUtil::ids();
-        $model = new CmsComic();
+        $model = new CmsComicChapter();
         foreach ($ids as $id) {
             $record = ModelUtil::get($model, $id);
             BizException::throwsIfEmpty($id.'记录不存在', $record);

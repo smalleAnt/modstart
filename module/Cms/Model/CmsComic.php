@@ -49,4 +49,9 @@ class CmsComic extends Model
         $query = self::with('chapter')->where($where);
         return $query->first();
     }
+
+    public static function getOptions()
+    {
+        return self::get()->pluck('name', 'id');
+    }
 }

@@ -120,8 +120,7 @@ class ModuleServiceProvider extends ServiceProvider
                         // ],
                         [
                             'title' => '章节详情',
-                            'url' => route('comic.chapter', ['modelId' => ':modelId', 'comicId' => ':comicId']),
-                            'key'   => 'custom_menu_key', // 自定义菜单标识字段
+                            'url' => route('comic.chapter', ['modelId' => '7']),
                         ],
                         [
                             'title' => '备份恢复',
