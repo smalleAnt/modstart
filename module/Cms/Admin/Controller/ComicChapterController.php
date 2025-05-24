@@ -119,7 +119,8 @@ class ComicChapterController extends Controller
                 $recordValue = ArrayUtil::keepKeys($data, [
                     'comic_id', 'number', 'title','sort','file_path'
                 ]);
-                $domain = config('app.url','http://ruants.com');
+                $domain = config('app.url');
+                $domain = strlen($domain) == 0 ? 'http://ruants.com' : $domain;
                 $recordValue['comic_id'] = $data['comic']['id'];
                 $recordValue['file_path'] = str_replace($domain,'',$recordValue['file_path']);
                 ModelUtil::transactionBegin();
