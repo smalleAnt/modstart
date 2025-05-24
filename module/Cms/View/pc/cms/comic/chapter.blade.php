@@ -22,7 +22,7 @@
                 </div>
                 <div class="tw-p-10" style="text-align: center;">
                     @foreach($record['imgs'] as $img)
-                    <img style="width:90%;" src="{{\ModStart\Core\Assets\AssetsUtil::fix($img['file_path'])}}" />
+                    <img style="width:90%;" src="{{\ModStart\Core\Assets\AssetsUtil::fix($img)}}" />
                     @endforeach
                 </div>
             </div>

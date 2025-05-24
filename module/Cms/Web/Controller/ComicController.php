@@ -33,6 +33,7 @@ class ComicController extends ModuleBaseController
         $viewData = [];
         $data = CmsComicChapter::getOneWithoutTrashed(['id'=>$chapterId]);
         $data = $data->toArray();
+        $data['imgs'] = json_decode($data['file_path'],true);
         $sort = $data['sort'];
         $comicId = (int)$comicId;
         //获取下一章
