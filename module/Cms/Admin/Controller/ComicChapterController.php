@@ -120,9 +120,9 @@ class ComicChapterController extends Controller
                     'comic_id', 'number', 'title','sort','file_path'
                 ]);
                 $domain = config('app.url');
-                $domain = strlen($domain) == 0 ? 'http://ruants.com' : $domain;
                 $recordValue['comic_id'] = $data['comic']['id'];
                 $recordValue['file_path'] = str_replace($domain,'',$recordValue['file_path']);
+                $recordValue['file_path'] = str_replace('http://ruants.com','',$recordValue['file_path']);
                 ModelUtil::transactionBegin();
                 if (!empty($record['id'])) {
                     $recordValue['updated_at'] = Carbon::now();
